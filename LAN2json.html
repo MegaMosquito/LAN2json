@@ -1,0 +1,166 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module LAN2json</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>LAN2json</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/pi/netmon/src/LAN2json/LAN2json.py">/home/pi/netmon/src/LAN2json/LAN2json.py</a></font></td></tr></table>
+    <p><tt><a href="#LAN2json">LAN2json</a>.py&nbsp;LAN&nbsp;scanning&nbsp;tools&nbsp;that&nbsp;return&nbsp;JSON<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;provides&nbsp;a&nbsp;"scan()"&nbsp;function&nbsp;to&nbsp;perform&nbsp;Local&nbsp;Area&nbsp;Network&nbsp;(LAN)<br>
+scans&nbsp;using&nbsp;the&nbsp;popular&nbsp;"nmap"&nbsp;utility.&nbsp;Note&nbsp;that&nbsp;"nmap"&nbsp;must&nbsp;be&nbsp;run&nbsp;as&nbsp;root<br>
+in&nbsp;order&nbsp;to&nbsp;acquire&nbsp;this&nbsp;data&nbsp;(so&nbsp;your&nbsp;program&nbsp;may&nbsp;need&nbsp;to&nbsp;run&nbsp;as&nbsp;root).<br>
+The&nbsp;"nmap"&nbsp;utility&nbsp;will&nbsp;run&nbsp;as&nbsp;non-root&nbsp;but&nbsp;it&nbsp;will&nbsp;not&nbsp;give&nbsp;the&nbsp;required<br>
+MAC&nbsp;address&nbsp;data&nbsp;unless&nbsp;it&nbsp;has&nbsp;root&nbsp;privilege:<br>
+&nbsp;<br>
+With&nbsp;root&nbsp;privilege&nbsp;nmap&nbsp;gives&nbsp;the&nbsp;MAC&nbsp;address&nbsp;and&nbsp;the&nbsp;manufacturer&nbsp;string:<br>
+&nbsp;$&nbsp;sudo&nbsp;nmap&nbsp;-sn&nbsp;-T5&nbsp;192.168.123.0/24<br>
+Starting&nbsp;Nmap&nbsp;7.40&nbsp;(&nbsp;https://nmap.org&nbsp;)&nbsp;at&nbsp;2019-06-01&nbsp;14:07&nbsp;PDT<br>
+Nmap&nbsp;scan&nbsp;report&nbsp;for&nbsp;192.168.123.1<br>
+Host&nbsp;is&nbsp;up&nbsp;(0.0031s&nbsp;latency).<br>
+MAC&nbsp;Address:&nbsp;3C:37:86:5E:EC:37&nbsp;(Unknown)<br>
+Nmap&nbsp;scan&nbsp;report&nbsp;for&nbsp;192.168.123.4<br>
+Host&nbsp;is&nbsp;up&nbsp;(0.0035s&nbsp;latency).<br>
+MAC&nbsp;Address:&nbsp;B8:27:EB:AC:14:3E&nbsp;(Raspberry&nbsp;Pi&nbsp;Foundation)<br>
+...<br>
+&nbsp;<br>
+Without&nbsp;root&nbsp;privilege&nbsp;nmap&nbsp;gives&nbsp;only&nbsp;IP&nbsp;address&nbsp;and&nbsp;latency:<br>
+&nbsp;$&nbsp;nmap&nbsp;-sn&nbsp;-T5&nbsp;192.168.123.0/24<br>
+Starting&nbsp;Nmap&nbsp;7.40&nbsp;(&nbsp;https://nmap.org&nbsp;)&nbsp;at&nbsp;2019-06-01&nbsp;14:07&nbsp;PDT<br>
+Nmap&nbsp;scan&nbsp;report&nbsp;for&nbsp;192.168.123.1<br>
+Host&nbsp;is&nbsp;up&nbsp;(0.0018s&nbsp;latency).<br>
+Nmap&nbsp;scan&nbsp;report&nbsp;for&nbsp;192.168.123.4<br>
+Host&nbsp;is&nbsp;up&nbsp;(0.0064s&nbsp;latency).<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;also&nbsp;provides&nbsp;a&nbsp;"portscan"&nbsp;static&nbsp;method&nbsp;that&nbsp;performs&nbsp;a<br>
+sequential&nbsp;TCP&nbsp;port&nbsp;connection&nbsp;scan&nbsp;on&nbsp;a&nbsp;specified&nbsp;host&nbsp;(to&nbsp;discover&nbsp;all<br>
+of&nbsp;the&nbsp;TCP&nbsp;ports&nbsp;within&nbsp;a&nbsp;specified&nbsp;range&nbsp;on&nbsp;that&nbsp;host&nbsp;that&nbsp;have&nbsp;bound<br>
+and&nbsp;responsive&nbsp;"listener"&nbsp;processes).<br>
+&nbsp;<br>
+There&nbsp;is&nbsp;also&nbsp;asmall&nbsp;main&nbsp;program&nbsp;wrapper&nbsp;so&nbsp;you&nbsp;can&nbsp;use&nbsp;it&nbsp;from&nbsp;the&nbsp;CLI.<br>
+&nbsp;<br>
+Example&nbsp;CLI&nbsp;commands:<br>
+&nbsp;&nbsp;$&nbsp;sudo&nbsp;python&nbsp;<a href="#LAN2json">LAN2json</a>.py&nbsp;scan&nbsp;'192.168.123.0/24'&nbsp;'192.168.123.3'&nbsp;'B8:27:EB:81:F4:79'&nbsp;'(Network&nbsp;Monitor&nbsp;Host)'<br>
+&nbsp;&nbsp;$&nbsp;sudo&nbsp;python&nbsp;<a href="#LAN2json">LAN2json</a>.py&nbsp;portscan&nbsp;'192.168.123.3'&nbsp;1&nbsp;65535<br>
+&nbsp;<br>
+Static&nbsp;functions&nbsp;provided:<br>
+&nbsp;&nbsp;portscan:&nbsp;find&nbsp;open&nbsp;TCP&nbsp;ports&nbsp;on&nbsp;a&nbsp;specific&nbsp;host<br>
+&nbsp;&nbsp;scan:&nbsp;find&nbsp;IP&nbsp;and&nbsp;MAC&nbsp;addresses&nbsp;on&nbsp;the&nbsp;LAN<br>
+&nbsp;<br>
+Attributes&nbsp;defined:<br>
+&nbsp;&nbsp;TCP_PORT_MIN:&nbsp;The&nbsp;lowest&nbsp;usable&nbsp;TCP&nbsp;port&nbsp;(1,&nbsp;since&nbsp;0&nbsp;is&nbsp;"reserved")<br>
+&nbsp;&nbsp;TCP_PORT_WELL_KNOWN_MAX:&nbsp;The&nbsp;highest&nbsp;numbered&nbsp;well-known&nbsp;TCP&nbsp;port<br>
+&nbsp;&nbsp;TCP_PORT_REGISTERED_MIN:&nbsp;The&nbsp;lowest&nbsp;numbered&nbsp;registered&nbsp;TCP&nbsp;port<br>
+&nbsp;&nbsp;TCP_PORT_REGISTERED_MAX:&nbsp;The&nbsp;highest&nbsp;numbered&nbsp;registered&nbsp;TCP&nbsp;port<br>
+&nbsp;&nbsp;TCP_PORT_MAX:&nbsp;The&nbsp;highest&nbsp;possible&nbsp;TCP&nbsp;port&nbsp;number<br>
+&nbsp;<br>
+Written&nbsp;by&nbsp;Glen&nbsp;Darling&nbsp;(mosquito@darlingevil.com)&nbsp;in&nbsp;December,&nbsp;2018.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="json.html">json</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="socket.html">socket</a><br>
+<a href="subprocess.html">subprocess</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="LAN2json.html#LAN2json">LAN2json</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LAN2json">class <strong>LAN2json</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Static methods defined here:<br>
+<dl><dt><a name="LAN2json-portscan"><strong>portscan</strong></a>(ip, min<font color="#909090">=1</font>, max<font color="#909090">=1023</font>)</dt><dd><tt>portscan:&nbsp;synchronously&nbsp;scan&nbsp;for&nbsp;open&nbsp;TCP&nbsp;ports&nbsp;within&nbsp;a&nbsp;range<br>
+&nbsp;<br>
+Use&nbsp;this&nbsp;function&nbsp;to&nbsp;discover&nbsp;open&nbsp;TCP&nbsp;ports&nbsp;(i.e.,&nbsp;those&nbsp;with&nbsp;listeners)<br>
+within&nbsp;a&nbsp;specific&nbsp;range&nbsp;on&nbsp;a&nbsp;specified&nbsp;host.&nbsp;Since&nbsp;this&nbsp;scanning&nbsp;can&nbsp;be<br>
+very&nbsp;slow,&nbsp;you&nbsp;may&nbsp;optionally&nbsp;specify&nbsp;a&nbsp;range&nbsp;of&nbsp;port&nbsp;numbers&nbsp;to&nbsp;scan.<br>
+For&nbsp;example&nbsp;you&nbsp;might&nbsp;want&nbsp;to&nbsp;scan&nbsp;all&nbsp;of&nbsp;the&nbsp;well&nbsp;"known-port"&nbsp;numbers<br>
+in&nbsp;range&nbsp;{1..1023}.&nbsp;On&nbsp;most&nbsp;hosts&nbsp;you&nbsp;require&nbsp;root&nbsp;privileges&nbsp;to<br>
+bind&nbsp;a&nbsp;listener&nbsp;to&nbsp;these&nbsp;ports.&nbsp;Alternatively&nbsp;you&nbsp;could&nbsp;choose&nbsp;the<br>
+IANA&nbsp;registered&nbsp;port&nbsp;range&nbsp;{1..49151}&nbsp;(i.e.,&nbsp;from&nbsp;2^10&nbsp;to&nbsp;2^14&nbsp;+&nbsp;2^15&nbsp;−&nbsp;1)<br>
+but&nbsp;this&nbsp;larger&nbsp;range&nbsp;will&nbsp;take&nbsp;much&nbsp;longer&nbsp;to&nbsp;scan.&nbsp;If&nbsp;you&nbsp;can&nbsp;spare<br>
+the&nbsp;time,&nbsp;you&nbsp;could&nbsp;also&nbsp;scan&nbsp;all&nbsp;possible&nbsp;TCP&nbsp;port&nbsp;numbers&nbsp;{0..65535}.<br>
+&nbsp;<br>
+If&nbsp;no&nbsp;range&nbsp;is&nbsp;specified,&nbsp;the&nbsp;default&nbsp;range&nbsp;of&nbsp;{1..1023}&nbsp;is&nbsp;used.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;aware&nbsp;of&nbsp;the&nbsp;TCP&nbsp;port&nbsp;assignments&nbsp;in&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc1340.txt">RFC1340</a>,&nbsp;available<br>
+at&nbsp;https://tools.ietf.org/html/rfc1340&nbsp;and&nbsp;it&nbsp;will&nbsp;supply&nbsp;the&nbsp;"keyword"<br>
+and&nbsp;"description"&nbsp;fields&nbsp;for&nbsp;thos&nbsp;ports&nbsp;that&nbsp;are&nbsp;provided&nbsp;in&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc1340.txt">RFC1340</a>,<br>
+if&nbsp;any,&nbsp;for&nbsp;all&nbsp;open&nbsp;ports&nbsp;it&nbsp;discovers.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;ip:&nbsp;string&nbsp;(IPv4&nbsp;address&nbsp;of&nbsp;this&nbsp;host&nbsp;on&nbsp;the&nbsp;LAN)<br>
+&nbsp;&nbsp;min:&nbsp;integer&nbsp;(optional&nbsp;lowest&nbsp;port&nbsp;nuber&nbsp;to&nbsp;scan&nbsp;--&nbsp;default&nbsp;TCP_PORT_MIN)<br>
+&nbsp;&nbsp;max:&nbsp;integer&nbsp;(optional&nbsp;highest&nbsp;port&nbsp;number&nbsp;to&nbsp;scan&nbsp;--&nbsp;default&nbsp;TCP_PORT_WELL_KNOWN_MAX)<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;a&nbsp;JSON&nbsp;array&nbsp;of&nbsp;records&nbsp;for&nbsp;each&nbsp;TCP&nbsp;ports&nbsp;with&nbsp;an&nbsp;active&nbsp;listener.<br>
+&nbsp;&nbsp;Fields&nbsp;and&nbsp;types&nbsp;for&nbsp;each&nbsp;record&nbsp;in&nbsp;the&nbsp;array:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"port":&nbsp;integer&nbsp;(the&nbsp;port&nbsp;number&nbsp;where&nbsp;a&nbsp;bound&nbsp;listener&nbsp;was&nbsp;found)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"status":&nbsp;string&nbsp;(always&nbsp;"open")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"known":&nbsp;boolean&nbsp;(True&nbsp;if&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc1340.txt">RFC1340</a>&nbsp;has&nbsp;info&nbsp;about&nbsp;this&nbsp;port)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"keyword":&nbsp;string&nbsp;(from&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc1340.txt">RFC1340</a>,&nbsp;may&nbsp;be&nbsp;"")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"description":&nbsp;string&nbsp;(from&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc1340.txt">RFC1340</a>,&nbsp;may&nbsp;be&nbsp;"")</tt></dd></dl>
+
+<dl><dt><a name="LAN2json-scan"><strong>scan</strong></a>(subnet_cidr, this_ip, this_mac, this_comment<font color="#909090">=''</font>)</dt><dd><tt>scan:&nbsp;synchronously&nbsp;run&nbsp;"nmap"&nbsp;in&nbsp;a&nbsp;subprocess&nbsp;to&nbsp;collect&nbsp;LAN&nbsp;hosts<br>
+&nbsp;<br>
+Use&nbsp;this&nbsp;function&nbsp;to&nbsp;scan&nbsp;the&nbsp;local&nbsp;area&nbsp;network&nbsp;(LAN)&nbsp;to&nbsp;detect&nbsp;LAN&nbsp;host<br>
+IPv4&nbsp;addresses,&nbsp;MAC&nbsp;addresses,&nbsp;and&nbsp;comment&nbsp;strings&nbsp;(as&nbsp;scanned&nbsp;from&nbsp;the<br>
+network).&nbsp;The&nbsp;underlying&nbsp;nmap&nbsp;utility&nbsp;needs&nbsp;the&nbsp;subnet&nbsp;CIDR,&nbsp;so&nbsp;that&nbsp;is<br>
+the&nbsp;first&nbsp;argument&nbsp;to&nbsp;this&nbsp;function.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;also&nbsp;takes&nbsp;arguments&nbsp;of&nbsp;the&nbsp;IP&nbsp;address,&nbsp;MAC&nbsp;address<br>
+(and&nbsp;optionally&nbsp;a&nbsp;comment&nbsp;string)&nbsp;for&nbsp;the&nbsp;host&nbsp;where&nbsp;the&nbsp;command&nbsp;is<br>
+being&nbsp;run.&nbsp;This&nbsp;is&nbsp;because&nbsp;nmap&nbsp;only&nbsp;returns&nbsp;the&nbsp;IP&nbsp;address&nbsp;for&nbsp;the<br>
+local&nbsp;host.&nbsp;So&nbsp;providing&nbsp;these&nbsp;additional&nbsp;details&nbsp;enables&nbsp;the&nbsp;"scan"<br>
+function&nbsp;to&nbsp;return&nbsp;a&nbsp;complete&nbsp;record&nbsp;even&nbsp;for&nbsp;the&nbsp;scanning&nbsp;host&nbsp;that<br>
+is&nbsp;running&nbsp;the&nbsp;command.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;subnet_cidr:&nbsp;string&nbsp;(subnet&nbsp;in&nbsp;CIDR&nbsp;format&nbsp;for&nbsp;this&nbsp;LAN)<br>
+&nbsp;&nbsp;this_ip:&nbsp;string&nbsp;(the&nbsp;IPv4&nbsp;address&nbsp;of&nbsp;this&nbsp;scanning&nbsp;host&nbsp;on&nbsp;the&nbsp;LAN)<br>
+&nbsp;&nbsp;this_MAC:&nbsp;string&nbsp;(the&nbsp;MAC&nbsp;address&nbsp;of&nbsp;this&nbsp;scanning&nbsp;host)<br>
+&nbsp;&nbsp;this_comment:&nbsp;string&nbsp;(optional&nbsp;comment&nbsp;field&nbsp;for&nbsp;this&nbsp;scanning&nbsp;host)<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;a&nbsp;JSON&nbsp;array&nbsp;of&nbsp;records&nbsp;for&nbsp;each&nbsp;host&nbsp;discovered&nbsp;on&nbsp;the&nbsp;LAN.<br>
+&nbsp;&nbsp;Fields&nbsp;and&nbsp;types&nbsp;for&nbsp;each&nbsp;record&nbsp;in&nbsp;the&nbsp;arry:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"ip":&nbsp;string&nbsp;(IPv4&nbsp;address&nbsp;where&nbsp;this&nbsp;host&nbsp;was&nbsp;found)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"mac":&nbsp;string&nbsp;(colon-delimited&nbsp;MAC&nbsp;address&nbsp;of&nbsp;this&nbsp;host)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"comment"&nbsp;string&nbsp;(detected&nbsp;interface&nbsp;manufacturer&nbsp;string)</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>TCP_PORT_MAX</strong> = 65535</dl>
+
+<dl><dt><strong>TCP_PORT_MIN</strong> = 1</dl>
+
+<dl><dt><strong>TCP_PORT_REGISTERED_MAX</strong> = 49151</dl>
+
+<dl><dt><strong>TCP_PORT_REGISTERED_MIN</strong> = 1024</dl>
+
+<dl><dt><strong>TCP_PORT_WELL_KNOWN_MAX</strong> = 1023</dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

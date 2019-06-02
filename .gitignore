@@ -1,3 +1,6 @@
+# Don't include the rfc1340 repo stuff if it is included here
+rfc1340/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

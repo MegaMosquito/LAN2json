@@ -19,6 +19,9 @@ MAC Address: 3C:37:86:5E:EC:37 (Unknown)
 Nmap scan report for 192.168.123.4
 Host is up (0.0035s latency).
 MAC Address: B8:27:EB:AC:14:3E (Raspberry Pi Foundation)
+Nmap scan report for atomicpi.lan (192.168.123.163)
+Host is up (0.015s latency).
+MAC Address: 00:07:32:4B:E3:C6 (Aaeon Technology)
 ...
 
 Without root privilege nmap gives only IP address and latency:
@@ -111,6 +114,11 @@ class LAN2json:
       try:
         # Each host has 3 lines of output (except this host has only 2)
         ip = process.stdout.readline().strip().decode('utf-8')[len(IP_PREFIX):]
+        # Now fixup this: "map scan report for atomicpi.lan (192.168.123.163)"
+        # Split string at whitespace, take only the last element
+        ip = ip.split()[-1]
+        # Remove () from the string
+        ip = ip.replace('(','').replace(')','')
         latency = process.stdout.readline().strip().decode('utf-8')
         mac_and_comment = process.stdout.readline().strip().decode('utf-8')[len(MAC_PREFIX):]
         # Exit loop at end of input

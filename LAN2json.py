@@ -99,15 +99,17 @@ class LAN2json:
     """
 
     # Root privilege is required or the `nmap` scan won't work correctly
+    sudo = ''
     if os.geteuid() != 0:
-      exit('Error: Root privilege is required for LAN2json.scan()! Exiting.')
+      print('Error: Root privilege is required for LAN2json.scan()! Will try passwordless "sudo".')
+      sudo = 'sudo '
 
     # Don't change these! (these are emitted by nmap, and used in egrep below)
     IP_PREFIX = 'Nmap scan report for '
     MAC_PREFIX = 'MAC Address: '
 
     # Run nmap on this subnet, then strip header, footer, and empty lines
-    COMMAND = 'nmap -sn -T5 ' + subnet_cidr + ' | egrep -v "Starting Nmap|Nmap done|^$"'
+    COMMAND = sudo + 'nmap -sn -T5 ' + subnet_cidr + ' | egrep -v "Starting Nmap|Nmap done|^$"'
     process = subprocess.Popen(['sh', '-c', COMMAND], stdout=subprocess.PIPE)
     hosts = []
     while True:

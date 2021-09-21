@@ -98,10 +98,18 @@ class LAN2json:
         "comment" string (detected interface manufacturer string)
     """
 
-    # Root privilege is required or the `nmap` scan won't work correctly
+    # Root privilege is required or the `nmap` scan won't work correctly.
+    # So if EUID is not zero, try using `sudo`. This will fail if user does
+    # not have *passwordless* sudo access to nmap. Note that if this is run
+    # inside a Docker container with `--privileged` and `--net=host` there
+    # will be a "root" user inside the container but it is not EUID 0, i.e.,
+    # it is not the *host* root. So in this case you may want to do somthing
+    # like this in your Dockerfile to create a user with sudo privilege:
+    #   RUN useradd -ms /bin/bash apache
+    #   RUN echo 'apache  ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
+    # (and then run your code as that user, i.e., "apache" here).
     sudo = ''
     if os.geteuid() != 0:
-      print('Error: Root privilege is required for LAN2json.scan()! Will try passwordless "sudo".')
       sudo = 'sudo '
 
     # Don't change these! (these are emitted by nmap, and used in egrep below)
